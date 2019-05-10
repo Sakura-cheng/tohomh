@@ -21,3 +21,14 @@ class TohomhItem(scrapy.Item):
     category = scrapy.Field()
     # 简介
     desc = scrapy.Field()
+
+
+class ContentItem(scrapy.Item):
+    # 漫画地址
+    comicUrl = scrapy.Field()
+    # 章节
+    chapter = scrapy.Field()
+    # 图片名
+    name = scrapy.Field()
+    # 图片地址
+    url = scrapy.Field()

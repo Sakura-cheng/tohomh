@@ -5,7 +5,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from tohomh import settings
-from tohomh.items import TohomhItem
+from tohomh.items import TohomhItem, ContentItem
 import pymysql
 
 
@@ -30,6 +30,21 @@ class TohomhPipeline(object):
                     print('已经存储过了...')
                 else:
                     cursor.execute(sql, (item['name'], item['author'], item['comicUrl'], item['comicStatus'], item['category']))
+                    self.db.commit()
+            except Exception as e:
+                self.db.rollback()
+                print(e)
+        elif isinstance(item, ContentItem):
+            cursor = self.db.cursor()
+            is_sql = "select url from contents where url = %s"
+            sql = "insert into contents (comic_url, chapter, name, url) values (%s, %s, %s, %s)"
+            try:
+                cursor.execute(is_sql, (item['url']))
+                is_exist = cursor.fetchone()
+                if is_exist:
+                    print('已经存储过了...')
+                else:
+                    cursor.execute(sql, (item['comicUrl'], item['chapter'], item['name'], item['url']))
                     self.db.commit()
             except Exception as e:
                 self.db.rollback()
