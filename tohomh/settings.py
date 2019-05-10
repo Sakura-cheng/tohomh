@@ -14,6 +14,13 @@ BOT_NAME = 'tohomh'
 SPIDER_MODULES = ['tohomh.spiders']
 NEWSPIDER_MODULE = 'tohomh.spiders'
 
+# MySQL
+MYSQL_HOST = '127.0.0.1'
+MYSQL_PORT = 3306
+MYSQL_USER = 'root'
+MYSQL_PASSWORD = '123'
+MYSQL_DB = 'tohomh_db'
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'tohomh (+http://www.yourdomain.com)'
@@ -64,9 +71,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'tohomh.pipelines.TohomhPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'tohomh.pipelines.TohomhPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html

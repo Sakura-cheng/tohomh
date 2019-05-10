@@ -6,9 +6,9 @@ from tohomh.items import TohomhItem
 
 class Tohomh(scrapy.Spider):
     name = 'tohomh'
-    allowed_domians = ['tohomh123.com']
+    allowed_domains = ['tohomh123.com']
     base_url = 'https://www.tohomh123.com'
-    start_url = 'https://www.tohomh123.com/f-1------hits--362.html'
+    start_url = 'https://www.tohomh123.com/f-1------hits--1.html'
 
     def start_requests(self):
         yield Request(self.start_url, self.parse)
