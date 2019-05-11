@@ -21,9 +21,12 @@ MYSQL_USER = 'root'
 MYSQL_PASSWORD = '123'
 MYSQL_DB = 'tohomh_db'
 
-# download a specified comic
+# specified comics
 IS_SPECIFIED = True
 COMIC_URL = ['https://www.tohomh123.com/zhenhunjie/', ]
+IMAGES_STORE = './images'
+# 30 days of delay for images expiration
+IMAGES_EXPIRES = 30
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'tohomh (+http://www.yourdomain.com)'
@@ -75,7 +78,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'tohomh.pipelines.TohomhPipeline': 300,
+   'tohomh.pipelines.TohomhPipeline': 301,
+   'tohomh.pipelines.ImagePipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

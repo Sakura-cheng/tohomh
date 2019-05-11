@@ -50,7 +50,7 @@ class Tohomh(scrapy.Spider):
         for chapter in chapters:
             chapter_name = chapter.a.get_text()
             chapter_url = self.base_url + chapter.a['href']
-            yield Request(chapter_url, self.get_content, meta={'comicUrl': response.url, 'chapter': chapter_name})
+            yield Request(chapter_url, self.get_content, meta={'comicName': item['name'], 'comicUrl': response.url, 'chapter': chapter_name})
 
     # 修改为根据请求的响应来获得图片的url
     def get_content(self, response):
@@ -66,13 +66,15 @@ class Tohomh(scrapy.Spider):
                 'sid': sid,
                 'iid': str(iid + 1)
             }
+            comicName = response.meta['comicName']
             comicUrl = response.meta['comicUrl']
             chapter = response.url.split('/')[-1].split('.')[0] + '_' + response.meta['chapter']
-            yield FormRequest(url, self.get_image, formdata=body, method='get', meta={'comicUrl': comicUrl, 'chapter': chapter})
+            yield FormRequest(url, self.get_image, formdata=body, method='get', meta={'comicName': comicName, 'comicUrl': comicUrl, 'chapter': chapter})
 
     def get_image(self, response):
         response_json = json.loads(response.text)
         item = ContentItem()
+        item['comicName'] = response.meta['comicName']
         item['comicUrl'] = response.meta['comicUrl']
         item['chapter'] = response.meta['chapter']
         item['url'] = response_json['Code']

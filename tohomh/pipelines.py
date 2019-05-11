@@ -6,7 +6,11 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 from tohomh import settings
 from tohomh.items import TohomhItem, ContentItem
+from scrapy import Request
+from scrapy.exceptions import DropItem
+from scrapy.pipelines.images import ImagesPipeline
 import pymysql
+import os
 
 
 class TohomhPipeline(object):
@@ -50,3 +54,23 @@ class TohomhPipeline(object):
                 self.db.rollback()
                 print(e)
         return item
+
+
+class ImagePipeline(ImagesPipeline):
+    def file_path(self, request, response=None, info=None):
+        item = request.meta['item']
+        name = item['comicName']
+        chapter = item['chapter']
+        url = request.url
+        file_name = os.path.join(name, chapter, url.split('/')[-1])
+        return file_name
+
+    def item_completed(self, results, item, info):
+        image_paths = [x['path'] for ok, x in results if ok]
+        if not image_paths:
+            raise DropItem('Image Downloaded Failed')
+        return item
+
+    def get_media_requests(self, item, info):
+        if isinstance(item, ContentItem):
+            yield Request(item['url'], meta={'item': item})

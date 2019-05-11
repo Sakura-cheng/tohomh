@@ -24,6 +24,8 @@ class TohomhItem(scrapy.Item):
 
 
 class ContentItem(scrapy.Item):
+    # 漫画名
+    comicName = scrapy.Field()
     # 漫画地址
     comicUrl = scrapy.Field()
     # 章节
