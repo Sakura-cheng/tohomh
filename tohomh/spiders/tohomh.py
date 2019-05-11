@@ -14,7 +14,8 @@ class Tohomh(scrapy.Spider):
 
     def start_requests(self):
         if IS_SPECIFIED:  # 某一特定漫画
-            yield Request(COMIC_URL, self.get_item)
+            for comic_url in COMIC_URL:
+                yield Request(comic_url, self.get_item)
         else:  # 全站漫画
             yield Request(self.start_url, self.parse)
 

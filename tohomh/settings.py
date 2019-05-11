@@ -23,7 +23,7 @@ MYSQL_DB = 'tohomh_db'
 
 # download a specified comic
 IS_SPECIFIED = True
-COMIC_URL = 'https://www.tohomh123.com/zhenhunjie/'
+COMIC_URL = ['https://www.tohomh123.com/zhenhunjie/', ]
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'tohomh (+http://www.yourdomain.com)'
