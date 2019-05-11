@@ -1,7 +1,8 @@
 import scrapy
 from bs4 import BeautifulSoup
-from scrapy.http import Request
+from scrapy.http import Request, FormRequest
 from tohomh.items import TohomhItem, ContentItem
+import json
 
 
 class Tohomh(scrapy.Spider):
@@ -46,16 +47,30 @@ class Tohomh(scrapy.Spider):
             chapter_url = self.base_url + chapter.a['href']
             yield Request(chapter_url, self.get_content, meta={'comicUrl': response.url, 'chapter': chapter_name})
 
+    # 修改为根据请求的响应来获得图片的url
     def get_content(self, response):
         content = BeautifulSoup(response.text, 'lxml')
-        url = content.find_all('script', {'type': 'text/javascript'})[-1].get_text().split(';')[-3].split("'")[-2][:-8]
-        format = content.find_all('script', {'type': 'text/javascript'})[-1].get_text().split(';')[-3].split("'")[-2][-4:]
+        did = content.find_all('script', {'type': 'text/javascript'})[-1].get_text().split(';')[1].split('did=')[-1]
+        sid = content.find_all('script', {'type': 'text/javascript'})[-1].get_text().split(';')[2].split('sid=')[-1]
         count = int(content.find_all('script', {'type': 'text/javascript'})[-1].get_text().split(';')[5].split(' = ')[-1])
 
-        for i in range(count):
-            item = ContentItem()
-            item['comicUrl'] = response.meta['comicUrl']
-            item['chapter'] = response.url.split('/')[-1].split('.')[0] + '_' + response.meta['chapter']
-            item['url'] = url + str(i).zfill(4) + format
-            item['name'] = item['comicUrl'].split('/')[-2] + '_' + item['chapter'] + '_' + str(i)
-            yield item
+        for iid in range(count):
+            url = self.base_url + '/action/play/read'
+            body = {
+                'did': did,
+                'sid': sid,
+                'iid': str(iid + 1)
+            }
+            comicUrl = response.meta['comicUrl']
+            chapter = response.url.split('/')[-1].split('.')[0] + '_' + response.meta['chapter']
+            yield FormRequest(url, self.get_image, formdata=body, method='get', meta={'comicUrl': comicUrl, 'chapter': chapter})
+
+    def get_image(self, response):
+        response_json = json.loads(response.text)
+        item = ContentItem()
+        item['comicUrl'] = response.meta['comicUrl']
+        item['chapter'] = response.meta['chapter']
+        item['url'] = response_json['Code']
+        item['name'] = item['comicUrl'].split('/')[-2] + '_' + item['chapter'] + '_' + item['url'].split('/')[-1]
+        yield item
+
