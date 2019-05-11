@@ -2,6 +2,7 @@ import scrapy
 from bs4 import BeautifulSoup
 from scrapy.http import Request, FormRequest
 from tohomh.items import TohomhItem, ContentItem
+from tohomh.settings import IS_SPECIFIED, COMIC_URL
 import json
 
 
@@ -12,7 +13,10 @@ class Tohomh(scrapy.Spider):
     start_url = 'https://www.tohomh123.com/f-1------hits--1.html'
 
     def start_requests(self):
-        yield Request(self.start_url, self.parse)
+        if IS_SPECIFIED:  # 某一特定漫画
+            yield Request(COMIC_URL, self.get_item)
+        else:  # 全站漫画
+            yield Request(self.start_url, self.parse)
 
     def parse(self, response):
         content = BeautifulSoup(response.text, 'lxml')
