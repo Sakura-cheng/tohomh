@@ -22,8 +22,8 @@ MYSQL_PASSWORD = '123'
 MYSQL_DB = 'tohomh_db'
 
 # specified comics
-IS_SPECIFIED = True
-COMIC_URL = ['https://www.tohomh123.com/zhenhunjie/', ]
+IS_SPECIFIED = True  # 为True时需要设置COMIC_URL指定漫画地址，为False即为爬全站漫画
+COMIC_URL = ['https://www.tohomh123.com/zhenhunjie/', ]  # 漫画地址list
 IMAGES_STORE = './images'
 # 30 days of delay for images expiration
 IMAGES_EXPIRES = 30
@@ -79,7 +79,7 @@ ROBOTSTXT_OBEY = True
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'tohomh.pipelines.TohomhPipeline': 301,
-   'tohomh.pipelines.ImagePipeline': 300,
+   'tohomh.pipelines.ImagePipeline': 300,  # 若不需要下载漫画则注释掉
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
