@@ -19,7 +19,7 @@ MYSQL_HOST = '127.0.0.1'
 MYSQL_PORT = 3306
 MYSQL_USER = 'root'
 MYSQL_PASSWORD = '123'
-MYSQL_DB = 'tohomh_db'
+MYSQL_DATABASE = 'tohomh_db'
 
 # specified comics
 IS_SPECIFIED = True  # 为True时需要设置COMIC_URL指定漫画地址，为False即为爬全站漫画

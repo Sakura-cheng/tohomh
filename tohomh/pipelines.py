@@ -19,8 +19,7 @@ class TohomhPipeline(object):
     port = settings.MYSQL_PORT
     user = settings.MYSQL_USER
     password = settings.MYSQL_PASSWORD
-    db = settings.MYSQL_DB
-    db = pymysql.connect(host=host, port=port, user=user, password=password, db=db, charset="utf8")
+    database = settings.MYSQL_DATABASE
 
     def process_item(self, item, spider):
         if isinstance(item, TohomhItem):
@@ -54,6 +53,12 @@ class TohomhPipeline(object):
                 self.db.rollback()
                 print(e)
         return item
+
+    def open_spider(self, spider):
+        self.db = pymysql.connect(host=self.host, port=self.port, user=self.user, password=self.password, database=self.database, charset="utf8")
+
+    def close_spider(self, spider):
+        self.db.close()
 
 
 class ImagePipeline(ImagesPipeline):
